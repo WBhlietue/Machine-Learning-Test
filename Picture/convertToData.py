@@ -2,7 +2,7 @@ import numpy as np
 import threading
 import multiprocessing
 
-_min=  -0.5
+_min = -0.5
 _max = 1
 w1 = [[_max, _min, _min], [_min, _max, _min], [_min, _min, _max]]
 w2 = [[_min, _min, _min], [_max, _max, _max], [_min, _min, _min]]
@@ -110,13 +110,27 @@ def Compress(data):
     return dataComp
 
 
+def Comp(data):
+    r = Compress(data[0])
+    g = Compress(data[1])
+    b = Compress(data[2])
+    return [r, g, b]
+
+
+def Resize(img, num):
+    if max(len(img[0]), len(img[0][0])) > num:
+        img = Comp(img)
+        return Resize(img, num)
+    res = [[[0] * num for _ in range(num)] for _ in range(3)]
+
+    for j in range(len(img[0][0])):
+        for i in range(len(img[0])):
+            res[0][i][j] = img[0][i][j]
+            res[1][i][j] = img[1][i][j]
+            res[2][i][j] = img[2][i][j]
+    return res
+
 def ToPooling(img):
-    def Comp(data):
-        r = Compress(data[0])
-        g = Compress(data[1])
-        b = Compress(data[2])
-        return[r, g, b]
     data = ToDataBlend(img)
-    data = Comp(data)
-    data = Comp(data)
+    data = Resize(data, 200)
     return data
