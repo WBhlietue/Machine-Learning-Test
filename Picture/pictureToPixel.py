@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import threading 
 
 def GetPixels(url):
     image = Image.open(url)
@@ -15,7 +16,11 @@ def GetPixels(url):
         img.append(w)
     return img
 
-def ToPic(pixels):
-    pixels = np.array(pixels, dtype=np.uint8)
+def ShowImage(pixels):
     image = Image.fromarray(pixels)
     image.show()
+
+def ToPic(pixels):
+    pixels = np.array(pixels, dtype=np.uint8)
+    tr = threading.Thread(target=ShowImage, args=(pixels, ))
+    tr.start()
