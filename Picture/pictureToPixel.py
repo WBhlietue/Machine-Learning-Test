@@ -18,9 +18,15 @@ def GetPixels(url):
 
 def ShowImage(pixels):
     image = Image.fromarray(pixels)
+    print(image)
     image.show()
+    pass
 
 def ToPic(pixels):
     pixels = np.array(pixels, dtype=np.uint8)
     tr = threading.Thread(target=ShowImage, args=(pixels, ))
     tr.start()
+    return tr
+    # image = Image.fromarray(pixels)
+    # print(image)
+    # image.show()

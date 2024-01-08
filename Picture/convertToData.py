@@ -41,9 +41,28 @@ def BlendRGB(rgbs, mask=[0, 1, 2]):
         img.append(row)
     return img
 
+def PixelNormalize(pixels):
+    list = []
+    for i in range(len(pixels)):
+        l = []
+        for j in range(len(pixels[0])):
+            l.append( pixels[i][j] / 255.0)
+        list.append(l)
+    list = vertical_flip(list)
+    list = rotate_90_degrees(list)
+    return list
+
+def horizontal_flip(matrix):
+    return [row[::-1] for row in matrix]
+
+def vertical_flip(matrix):
+    return matrix[::-1]
+
+def rotate_90_degrees(matrix):
+    rotated = list(zip(*matrix[::-1]))
+    return [list(row) for row in rotated]
 
 def ToDataBlend(img):
-    print("Start convert data")
     dataR = np.zeros([len(img[0]) - 2, len(img[0][0]) - 2])
     dataG = np.zeros([len(img[0]) - 2, len(img[0][0]) - 2])
     dataB = np.zeros([len(img[0]) - 2, len(img[0][0]) - 2])
@@ -75,7 +94,6 @@ def ToDataBlend(img):
         return num1, num2
 
     for j in range(len(img[0]) - 2):
-        print(f"progress {(j+1)/full*100: .2f}%", end="\r")
         for i in range(len(img[0][0]) - 2):
             num1, num2 = GetNum(0)
             dataR[j][i] = max(num1, num2, 0)
@@ -85,16 +103,13 @@ def ToDataBlend(img):
 
             num1, num2 = GetNum(2)
             dataB[j][i] = max(num1, num2, 0)
-    print("Convert Complete")
     return [dataR, dataG, dataB]
 
 
 def Compress(data):
-    print("compressing")
     dataComp = np.zeros([int(len(data) / 2), int(len(data[0]) / 2)])
     full = int(len(data) / 2)
     for i in range(int(len(data) / 2)):
-        print(f"progress {(i+1)/full*100: .2f}%", end="\r")
         for j in range(int(len(data[0]) / 2)):
             max = 0
             if max < data[i * 2][j * 2]:
@@ -106,7 +121,6 @@ def Compress(data):
             if max < data[i * 2 + 1][j * 2 + 1]:
                 max = data[i * 2 + 1][j * 2 + 1]
             dataComp[i][j] = max
-    print("compress over")
     return dataComp
 
 
@@ -130,7 +144,15 @@ def Resize(img, num):
             res[2][i][j] = img[2][i][j]
     return res
 
-def ToPooling(img):
+def ToPooling(img, size):
     data = ToDataBlend(img)
-    data = Resize(data, 200)
+    data = Resize(data, size)
     return data
+
+
+def ToLine(pixel):
+    list = []
+    for i in pixel:
+        for j in i:
+            list.append(j)
+    return list
