@@ -15,6 +15,9 @@ def ReadData(num):
         pixel = convert.PixelNormalize(pixel)
         pixel = convert.ToPooling([pixel, pixel, pixel], 26)
         line = np.array(convert.ToLine(pixel[0]))
+        pixel = convert.BlendRGB(pixel, [0, 1, 2])
+        tr = toPix.ToPic(pixel)
+        tr.join()
         return line
     list = []
     y = []
@@ -28,7 +31,7 @@ def ReadData(num):
 
 
 
-data = ReadData(100)
+# data = ReadData(100)
 def GetRealY(index):
     list = []
     for i in data[1]:
@@ -37,14 +40,14 @@ def GetRealY(index):
     return list
 
 
-x = np.array(data[0])
-z = calc.GetYProd(x, np.array([1] * len(data[0][0])), 1)
+# x = np.array(data[0])
+# z = calc.GetYProd(x, np.array([1] * len(data[0][0])), 1)
 
 
-yReal = GetRealY(0)
+# yReal = GetRealY(0)
 
-print(x)
-print(np.array([1] * len(data[0][0])))
+# print(x)
+# print(np.array([1] * len(data[0][0])))
 
 def GradientNew(x, y, w, b):
   print(x)
@@ -76,4 +79,6 @@ def GradientRunNew(x, y, maxNum, learningRate):
 
   return initW, initB
 
-GradientRunNew(x, yReal, 1000, 0.01)
+# GradientRunNew(x, yReal, 1000, 0.01)
+
+ReadData(1000)

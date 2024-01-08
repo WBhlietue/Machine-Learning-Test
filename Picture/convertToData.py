@@ -2,7 +2,7 @@ import numpy as np
 import threading
 import multiprocessing
 
-_min = -0.5
+_min = 0
 _max = 1
 w1 = [[_max, _min, _min], [_min, _max, _min], [_min, _min, _max]]
 w2 = [[_min, _min, _min], [_max, _max, _max], [_min, _min, _min]]
