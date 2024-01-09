@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import Picture.calculateW as calc
 import numpy as np
 from keras.utils import to_categorical
+import time
 
 
 def ReadData(num):
@@ -13,19 +14,19 @@ def ReadData(num):
     def GetArray(num):
         pixel = trainImage[num]
         pixel = convert.PixelNormalize(pixel)
-        pixel = convert.ToPooling([pixel, pixel, pixel], 26)
+        pixel = convert.ToPooling([pixel, pixel, pixel], 28)
         line = np.array(convert.ToLine(pixel[0]))
-        pixel = convert.BlendRGB(pixel, [0, 1, 2])
-        tr = toPix.ToPic(pixel)
-        tr.join()
         return line
     list = []
     y = []
+    # startTime = time.time()
     for i in range(num):
         if(i % 100 == 0):
             print(i)
         list.append(GetArray(i))
         y.append(trainLabel[i])
+    # endTime = time.time()
+    # print(endTime - startTime)
     return (list, y)
 
 
@@ -80,5 +81,3 @@ def GradientRunNew(x, y, maxNum, learningRate):
   return initW, initB
 
 # GradientRunNew(x, yReal, 1000, 0.01)
-
-ReadData(1000)
